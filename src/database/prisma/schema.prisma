@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id        Int    @id @default(autoincrement())
+  name      String @db.VarChar(100)
+  password  String @db.VarChar(75)
+  CPF       String @db.Char(11)
+  privilege Int    @db.TinyInt
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model vehicle {
+  id    Int    @id @default(autoincrement())
+  plate String @db.Char(7)
+  type  Int    @db.TinyInt
+  brand String @db.VarChar(75)
+  model String @db.VarChar(75)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model suplier {
+  id     Int     @id @default(autoincrement())
+  name   String  @db.VarChar(75)
+  phone  String  @db.Char(11)
+  status Boolean
+  CNPJ   String  @db.Char(14)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model visitor {
+  id     Int     @id @default(autoincrement())
+  name   String  @db.VarChar(75)
+  phone  String  @db.Char(11)
+  status Boolean
+  rg     String  @db.VarChar(20)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model collaborator {
+  id              Int    @id @default(autoincrement())
+  name            String @db.VarChar(75)
+  register_employ String @db.Char(15)
+  position        String @db.VarChar(30)
+  department      String @db.VarChar(20)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model delivery_received {
+  id                   Int      @id @default(autoincrement())
+  name_delivery_person String   @db.VarChar(75)
+  register_employ      String   @db.Char(15)
+  type                 String   @db.VarChar(30)
+  date                 DateTime
+  Observation          String   @db.VarChar(100)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
