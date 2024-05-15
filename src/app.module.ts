@@ -6,9 +6,12 @@ import { DatabaseModule } from './database/database.module';
 import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
+import { SuplierModule } from './modules/suplier/suplier.module';
+import { ColaboratorModule } from './modules/colaborator/colaborator.module';
+import { VisitorModule } from './modules/visitor/visitor.module';
 
 @Module({
-  imports: [AuthModule, DatabaseModule, VehicleModule],
+  imports: [AuthModule, DatabaseModule, VehicleModule, SuplierModule, ColaboratorModule, VisitorModule],
   controllers: [AppController],
   providers: [
     AppService,
