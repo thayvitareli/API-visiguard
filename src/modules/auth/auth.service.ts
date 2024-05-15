@@ -14,10 +14,10 @@ export class AuthService {
 
   async validateUser({ cpf, password }: LoginDto) {
     const user = await this.userRepository.findOne({ CPF: cpf });
-
+    console.log(user)
     if (user) {
       const isValidPassword = await bcrypt.compare(password, user.password);
-
+      console.log(isValidPassword)
       if (isValidPassword) return user;
 
       throw new BadRequestException(httpMessagesCommon.loginFailed);
