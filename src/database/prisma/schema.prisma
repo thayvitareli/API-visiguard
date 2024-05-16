@@ -17,7 +17,7 @@ model user {
   id        Int    @id @default(autoincrement())
   name      String @db.VarChar(100)
   password  String @db.VarChar(75)
-  CPF       String @db.Char(11)
+  CPF       String @unique @db.Char(11)
   privilege Int    @db.TinyInt
 
   created_at DateTime @default(now())
@@ -41,7 +41,7 @@ model suplier {
   name   String  @db.VarChar(75)
   phone  String  @db.Char(11)
   status Boolean
-  CNPJ   String  @db.Char(14)
+  CNPJ   String  @unique @db.Char(14)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -51,7 +51,7 @@ model visitor {
   id    Int    @id @default(autoincrement())
   name  String @db.VarChar(75)
   phone String @db.Char(14)
-  rg    String @db.VarChar(20)
+  rg    String @unique @db.VarChar(20)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -60,7 +60,7 @@ model visitor {
 model collaborator {
   id              Int    @id @default(autoincrement())
   name            String @db.VarChar(75)
-  register_employ String @db.Char(75)
+  register_employ String @unique @db.Char(75)
   position        Int    @db.TinyInt
   department      Int    @db.TinyInt
 
