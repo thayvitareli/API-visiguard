@@ -1,15 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSuplierDto } from './dto/create-suplier.dto';
 import { UpdateSuplierDto } from './dto/update-suplier.dto';
+import SuplierRepository from 'src/database/repositories/suplier.respository';
+import { FindManySuplierDto } from './dto/find-many-suplier-dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class SuplierService {
+  constructor(private readonly suplierRepository: SuplierRepository) {}
   create(createSuplierDto: CreateSuplierDto) {
     return 'This action adds a new suplier';
   }
 
-  findAll() {
-    return `This action returns all suplier`;
+  async findAll({ search, CNPJ, skip, take }: FindManySuplierDto) {
+    const where: Prisma.suplierWhereInput = {
+      OR: [
+        {
+          name: { contains: search },
+        },
+        {
+          CNPJ: { contains: CNPJ },
+        },
+      ],
+    };
+
+    const records = await this.suplierRepository.findMany(where, skip, take);
+    const total = await this.suplierRepository.count(where);
+    return { total, records };
   }
 
   findOne(id: number) {

@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { SuplierService } from './suplier.service';
 import { CreateSuplierDto } from './dto/create-suplier.dto';
 import { UpdateSuplierDto } from './dto/update-suplier.dto';
+import { FindManySuplierDto } from './dto/find-many-suplier-dto';
 
 @Controller('suplier')
 export class SuplierController {
@@ -13,8 +23,8 @@ export class SuplierController {
   }
 
   @Get()
-  findAll() {
-    return this.suplierService.findAll();
+  findAll(@Query() findMany: FindManySuplierDto) {
+    return this.suplierService.findAll(findMany);
   }
 
   @Get(':id')

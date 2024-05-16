@@ -3,22 +3,31 @@ import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import VehicleRepository from 'src/database/repositories/vehicle.repository';
 import { Prisma } from '@prisma/client';
+import { FindManyVeicheDto } from './dto/find-many-veichle.dto';
 
 @Injectable()
 export class VehicleService {
-  constructor(private readonly vehicle_repository:VehicleRepository){}
+  constructor(private readonly vehicle_repository: VehicleRepository) {}
   create(createVehicleDto: CreateVehicleDto) {
     const data: Prisma.vehicleCreateInput = {
       brand: createVehicleDto.brand.toString(),
       model: createVehicleDto.model.toString(),
       plate: createVehicleDto.plate.toString(),
-      type: createVehicleDto.type
-    }
+      type: createVehicleDto.type,
+    };
     return this.vehicle_repository.create(data);
   }
 
-  findAll() {
-    return `This action returns all vehicle`;
+  async findAll({ type, search, skip, take }: FindManyVeicheDto) {
+    const where: Prisma.vehicleWhereInput = {
+      plate: { contains: search },
+      type,
+    };
+
+    const records = this.vehicle_repository.findMany(where, skip, take);
+    const total = await this.vehicle_repository.count(where);
+
+    return { total, records };
   }
 
   findOne(id: number) {

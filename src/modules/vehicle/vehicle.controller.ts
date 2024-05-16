@@ -1,7 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { VehicleService } from './vehicle.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
+import { FindManyCollaboratorDto } from '../colaborator/dto/find-many-collaborator.dto';
+import { FindManyVeicheDto } from './dto/find-many-veichle.dto';
 
 @Controller('vehicle')
 export class VehicleController {
@@ -13,8 +24,8 @@ export class VehicleController {
   }
 
   @Get()
-  findAll() {
-    return this.vehicleService.findAll();
+  findAll(@Query() findMany: FindManyVeicheDto) {
+    return this.vehicleService.findAll(findMany);
   }
 
   @Get(':id')
