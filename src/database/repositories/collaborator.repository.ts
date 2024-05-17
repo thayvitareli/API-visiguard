@@ -27,4 +27,8 @@ export default class CollaboratorRepository {
   async count(where: Prisma.collaboratorWhereInput) {
     return await this.prisma.collaborator.count({ where });
   }
+
+  async findOne(where: Prisma.collaboratorWhereInput) {
+    return await this.prisma.collaborator.findFirst({ where });
+  }
 }

@@ -11,7 +11,14 @@ import { ColaboratorModule } from './modules/colaborator/colaborator.module';
 import { VisitorModule } from './modules/visitor/visitor.module';
 
 @Module({
-  imports: [AuthModule, DatabaseModule, VehicleModule, SuplierModule, ColaboratorModule, VisitorModule],
+  imports: [
+    AuthModule,
+    DatabaseModule,
+    VehicleModule,
+    SuplierModule,
+    ColaboratorModule,
+    VisitorModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
