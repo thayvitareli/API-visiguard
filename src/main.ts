@@ -11,6 +11,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  await app.listen(3000);
+  app.enableCors({ origin: '*' });
+
+  await app.listen(8088);
 }
 bootstrap();
