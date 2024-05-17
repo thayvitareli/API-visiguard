@@ -8,4 +8,8 @@ export default class VisitorRepository {
   async create(data: Prisma.visitorCreateInput) {
     return await this.prisma.visitor.create({ data });
   }
+
+  async findOne(where: Prisma.visitorWhereInput) {
+    return await this.prisma.visitor.findFirst({ where });
+  }
 }
