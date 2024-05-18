@@ -19,10 +19,21 @@ export class VehicleService {
   }
 
   async findAll({ type, search, skip, take }: FindManyVeicheDto) {
-    const where: Prisma.vehicleWhereInput = {
-      plate: { contains: search },
-      type,
-    };
+    let where: Prisma.vehicleWhereInput = {};
+
+    if (type) {
+      where = {
+        ...where,
+        type,
+      };
+    }
+
+    if (search) {
+      where = {
+        ...where,
+        plate: { contains: search },
+      };
+    }
 
     const records = this.vehicle_repository.findMany(where, skip, take);
     const total = await this.vehicle_repository.count(where);

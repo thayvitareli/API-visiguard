@@ -13,16 +13,21 @@ export class SuplierService {
   }
 
   async findAll({ search, CNPJ, skip, take }: FindManySuplierDto) {
-    const where: Prisma.suplierWhereInput = {
-      OR: [
-        {
-          name: { contains: search },
-        },
-        {
-          CNPJ: { contains: CNPJ },
-        },
-      ],
-    };
+    let where: Prisma.suplierWhereInput = {};
+
+    if (search) {
+      where = {
+        ...where,
+        OR: [
+          {
+            name: { contains: search },
+          },
+          {
+            CNPJ: { contains: CNPJ },
+          },
+        ],
+      };
+    }
 
     const records = await this.suplierRepository.findMany(where, skip, take);
     const total = await this.suplierRepository.count(where);

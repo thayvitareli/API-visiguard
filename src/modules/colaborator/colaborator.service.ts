@@ -38,12 +38,17 @@ export class ColaboratorService {
   }
 
   async findAll({ search, skip, take }: FindManyCollaboratorDto) {
-    const where: Prisma.collaboratorWhereInput = {
-      OR: [
-        { name: { contains: search } },
-        { register_employ: { contains: search } },
-      ],
-    };
+    let where: Prisma.collaboratorWhereInput = {};
+
+    if (search) {
+      where = {
+        ...where,
+        OR: [
+          { name: { contains: search } },
+          { register_employ: { contains: search } },
+        ],
+      };
+    }
 
     const record = await this.collaboratorRepository.findMany(
       where,
