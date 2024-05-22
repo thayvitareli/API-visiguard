@@ -35,7 +35,7 @@ export class VehicleService {
       };
     }
 
-    const records = this.vehicle_repository.findMany(where, skip, take);
+    const records = await this.vehicle_repository.findMany(where, skip, take);
     const total = await this.vehicle_repository.count(where);
 
     return { total, records };
