@@ -12,4 +12,23 @@ export default class VisitorRepository {
   async findOne(where: Prisma.visitorWhereInput) {
     return await this.prisma.visitor.findFirst({ where });
   }
+  async findMany(
+    where: Prisma.visitorWhereInput,
+    skip: number,
+    take: number,
+    select?: Prisma.visitorSelect,
+  ) {
+    return await this.prisma.visitor.findMany({
+      where,
+      skip,
+      take,
+      select,
+    });
+  }
+
+  async count(where: Prisma.visitorWhereInput) {
+    return await this.prisma.visitor.count({
+      where,
+    });
+  }
 }

@@ -1,20 +1,18 @@
-import { IsEmpty, IsString } from "class-validator";
-
+import { Mask } from '@tboerc/maskfy';
+import { Transform } from 'class-transformer';
+import { IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateVisitorDto {
-    
-    @IsEmpty()
-    @IsString()
-    name:string;
-    
-    @IsEmpty()
-    @IsString()
-    rg:string;
-    
-    @IsEmpty()
-    @IsString()
-    phone:string;
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
+  @IsNotEmpty()
+  @IsString()
+  rg: string;
 
-
+  @Transform(({ value }) => Mask.phone.raw(value))
+  @IsNotEmpty()
+  @IsString()
+  phone: string;
 }

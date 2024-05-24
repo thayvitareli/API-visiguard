@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { VisitorService } from './visitor.service';
 import { CreateVisitorDto } from './dto/create-visitor.dto';
 import { UpdateVisitorDto } from './dto/update-visitor.dto';
+import { FindManyVisitorDto } from './dto/find-many-visitor-dto';
 
 @Controller('visitor')
 export class VisitorController {
@@ -13,8 +23,8 @@ export class VisitorController {
   }
 
   @Get()
-  findAll() {
-    return this.visitorService.findAll();
+  findAll(@Query() findMany: FindManyVisitorDto) {
+    return this.visitorService.findAll(findMany);
   }
 
   @Get(':id')
