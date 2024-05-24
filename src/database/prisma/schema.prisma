@@ -43,8 +43,9 @@ model suplier {
   status Boolean
   CNPJ   String  @unique @db.Char(14)
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at           DateTime               @default(now())
+  updated_at           DateTime               @updatedAt
+  check_in_out_suplier check_in_out_suplier[]
 }
 
 model visitor {
@@ -53,8 +54,9 @@ model visitor {
   phone String @db.Char(14)
   rg    String @unique @db.VarChar(20)
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at           DateTime               @default(now())
+  updated_at           DateTime               @updatedAt
+  check_in_out_visitor check_in_out_visitor[]
 }
 
 model collaborator {
@@ -64,8 +66,9 @@ model collaborator {
   position        Int    @db.TinyInt
   department      Int    @db.TinyInt
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at                DateTime                    @default(now())
+  updated_at                DateTime                    @updatedAt
+  check_in_out_Collaborator check_in_out_collaborator[]
 }
 
 model delivery_received {
@@ -88,4 +91,36 @@ model report {
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+}
+
+model check_in_out_visitor {
+  id             Int       @id @default(autoincrement())
+  date_check_in  DateTime  @db.DateTime()
+  date_check_out DateTime?
+  plate          String?   @db.VarChar(7)
+
+  visitor_id Int
+  visitor    visitor @relation(fields: [visitor_id], references: [id])
+}
+
+model check_in_out_collaborator {
+  id             Int       @id @default(autoincrement())
+  date_check_in  DateTime  @db.DateTime()
+  date_check_out DateTime?
+  plate          String?   @db.VarChar(7)
+
+  collaborator_id Int
+  collaborator    collaborator @relation(fields: [collaborator_id], references: [id])
+}
+
+model check_in_out_suplier {
+  id             Int       @id @default(autoincrement())
+  date_check_in  DateTime  @db.DateTime()
+  date_check_out DateTime?
+  plate          String?   @db.VarChar(7)
+  name_employee  String    @db.VarChar(75)
+  rg_empoyee     String    @db.VarChar(20)
+
+  suplier_id Int
+  suplier    suplier @relation(fields: [suplier_id], references: [id])
 }
