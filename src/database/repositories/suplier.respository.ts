@@ -21,6 +21,7 @@ export default class SuplierRepository {
       select,
       skip,
       take,
+      orderBy: { created_at: 'desc' },
     });
   }
 

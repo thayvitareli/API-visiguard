@@ -21,6 +21,7 @@ export default class CollaboratorRepository {
       skip,
       take,
       select,
+      orderBy: { created_at: 'desc' },
     });
   }
 

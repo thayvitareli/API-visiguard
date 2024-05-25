@@ -23,6 +23,7 @@ export default class VisitorRepository {
       skip,
       take,
       select,
+      orderBy: { created_at: 'desc' },
     });
   }
 
