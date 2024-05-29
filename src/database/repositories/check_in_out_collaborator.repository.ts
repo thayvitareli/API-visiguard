@@ -12,8 +12,8 @@ export default class CheckInOutCollaboratorRepository {
 
   async findMany(
     where: Prisma.check_in_out_collaboratorWhereInput,
-    skip: number,
-    take: number,
+    skip?: number,
+    take?: number,
     select?: Prisma.collaboratorSelect,
   ) {
     return await this.prisma.check_in_out_collaborator.findMany({

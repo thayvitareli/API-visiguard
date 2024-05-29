@@ -12,8 +12,8 @@ export default class CheckInOutVisitorRepository {
 
   async findMany(
     where: Prisma.check_in_out_visitorWhereInput,
-    skip: number,
-    take: number,
+    skip?: number,
+    take?:number,
     select?: Prisma.visitorSelect,
   ) {
     return await this.prisma.check_in_out_visitor.findMany({
