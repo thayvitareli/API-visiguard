@@ -8,36 +8,84 @@ import CheckInOutSuplierRepository from 'src/database/repositories/check_in_out_
 
 @Injectable()
 export class CheckIntOutService {
-  constructor(private readonly checkInOutCollaboratorRepository:CheckInOutCollaboratorRepository,
-    private readonly checkInOutVisitorRepository:CheckInOutVisitorRepository,
-    private readonly checkInOutSuplierRepository: CheckInOutSuplierRepository){}
+  constructor(
+    private readonly checkInOutCollaboratorRepository: CheckInOutCollaboratorRepository,
+    private readonly checkInOutVisitorRepository: CheckInOutVisitorRepository,
+    private readonly checkInOutSuplierRepository: CheckInOutSuplierRepository,
+  ) {}
 
   create(createCheckIntOutDto: CreateCheckIntOutDto) {
     return 'This action adds a new checkIntOut';
   }
 
   async findAll() {
-    let whereCollaborator: Prisma.check_in_out_collaboratorWhereInput = {}
-    const collaboratoresCheck = await this.checkInOutCollaboratorRepository.findMany(whereCollaborator);
+    const whereCollaborator: Prisma.check_in_out_collaboratorWhereInput = {};
+    const collaboratoresCheck = (
+      await this.checkInOutCollaboratorRepository.findMany({
+        where: whereCollaborator,
+        include: {
+          collaborator: true,
+        },
+      })
+    ).map((element) => {
+      const obj = {
+        id: element.id,
+        date_check_in: element.date_check_in,
+        date_check_out: element.date_check_out,
+        plate: element.plate,
+        collaborator_id: element.collaborator_id,
+        name: element.collaborator.name,
+        document: element.collaborator.register_employ,
+      };
+      return obj;
+    });
 
-    let whereVisitor: Prisma.check_in_out_visitorWhereInput = {}
-    const visitorCheck = await this.checkInOutVisitorRepository.findMany(whereVisitor);
+    const whereVisitor: Prisma.check_in_out_visitorWhereInput = {};
+    const visitorCheck = (
+      await this.checkInOutVisitorRepository.findMany({
+        where: whereVisitor,
+        include: {
+          visitor: true,
+        },
+      })
+    ).map((element) => {
+      const obj = {
+        id: element.id,
+        date_check_in: element.date_check_in,
+        date_check_out: element.date_check_out,
+        plate: element.plate,
+        visitor_id: element.visitor_id,
+        name: element.visitor.name,
+        document: element.visitor.rg,
+      };
+      return obj;
+    });
 
-    let whereSuplier: Prisma.check_in_out_suplierWhereInput = {}
-    const suplierCheck = await this.checkInOutSuplierRepository.findMany(whereSuplier);
+    const whereSuplier: Prisma.check_in_out_suplierWhereInput = {};
+    const suplierCheck = (
+      await this.checkInOutSuplierRepository.findMany({
+        where: whereSuplier,
+        include: {
+          suplier: true,
+        },
+      })
+    ).map((element) => {
+      const obj = {
+        id: element.id,
+        date_check_in: element.date_check_in,
+        date_check_out: element.date_check_out,
+        plate: element.plate,
+        suplier_id: element.suplier_id,
+        name: element.suplier.name,
+        document: element.suplier.CNPJ,
+      };
+      return obj;
+    });
 
-    return [...visitorCheck, ...collaboratoresCheck,...suplierCheck];
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} checkIntOut`;
+    return [...visitorCheck, ...collaboratoresCheck, ...suplierCheck];
   }
 
   update(id: number, updateCheckIntOutDto: UpdateCheckIntOutDto) {
     return `This action updates a #${id} checkIntOut`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} checkIntOut`;
   }
 }

@@ -10,17 +10,22 @@ export default class CheckInOutSuplierRepository {
     return await this.prisma.check_in_out_suplier.create({ data });
   }
 
-  async findMany(
-    where: Prisma.check_in_out_suplierWhereInput,
-    skip?: number,
-    take?: number,
-    select?: Prisma.suplierSelect,
-  ) {
+  async findMany({
+    where,
+    skip,
+    take,
+    include,
+  }: {
+    where: Prisma.check_in_out_suplierWhereInput;
+    skip?: number;
+    take?: number;
+    include?: Prisma.check_in_out_suplierInclude;
+  }) {
     return await this.prisma.check_in_out_suplier.findMany({
       where,
       skip,
       take,
-      select,
+      include,
     });
   }
 
