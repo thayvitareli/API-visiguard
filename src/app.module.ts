@@ -9,7 +9,7 @@ import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { SuplierModule } from './modules/suplier/suplier.module';
 import { ColaboratorModule } from './modules/colaborator/colaborator.module';
 import { VisitorModule } from './modules/visitor/visitor.module';
-import { CheckIntOutModule } from './modules/check-int-out/check-in-out.module';
+import { CheckInOutModule } from './modules/check-in-out/check-in-out.module';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { CheckIntOutModule } from './modules/check-int-out/check-in-out.module';
     SuplierModule,
     ColaboratorModule,
     VisitorModule,
-    CheckIntOutModule,
+    CheckInOutModule,
   ],
   controllers: [AppController],
   providers: [
