@@ -1,18 +1,25 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch } from '@nestjs/common';
 import { CheckIntOutService } from './check-in-out.service';
-import { CreateCheckIntOutDto } from './dto/create-check-int-out.dto';
+import { UpdateCheckInOutDto } from './dto/update-check-in-out.dto';
+import { CreateCheckInOutDto } from './dto/create-check-in-out.dto';
 
 @Controller('check-in-out')
 export class CheckIntOutController {
-  constructor(private readonly checkIntOutService: CheckIntOutService) {}
+  constructor(private readonly checkInOutService: CheckIntOutService) {}
 
   @Post()
-  create(@Body() createCheckIntOutDto: CreateCheckIntOutDto) {
-    return this.checkIntOutService.create(createCheckIntOutDto);
+  create(@Body() createCheckIntOutDto: CreateCheckInOutDto) {
+    return this.checkInOutService.registerCheckIn(createCheckIntOutDto);
   }
 
   @Get()
   findAll() {
-    return this.checkIntOutService.findAll();
+    return this.checkInOutService.findAll();
+  }
+
+  @Patch()
+  update(@Body() updateCheckInOutDto: UpdateCheckInOutDto) {
+    console.log('Controller ', updateCheckInOutDto);
+    return this.checkInOutService.registerCheckOut(updateCheckInOutDto);
   }
 }

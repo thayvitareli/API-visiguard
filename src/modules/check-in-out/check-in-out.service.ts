@@ -1,10 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCheckIntOutDto } from './dto/create-check-int-out.dto';
-import { UpdateCheckIntOutDto } from './dto/update-check-int-out.dto';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+
 import CheckInOutCollaboratorRepository from 'src/database/repositories/check_in_out_collaborator.repository';
 import { Prisma } from '@prisma/client';
 import CheckInOutVisitorRepository from 'src/database/repositories/check_in_out_visitor.repository copy';
 import CheckInOutSuplierRepository from 'src/database/repositories/check_in_out_suplier.repository';
+import { UpdateCheckInOutDto } from './dto/update-check-in-out.dto';
+import { TypeCheckCommon } from 'src/common/typeChecks.common';
+import httpMessagesCommon from 'src/common/http-messages.common';
+import * as dayjs from 'dayjs';
+import { CreateCheckInOutDto } from './dto/create-check-in-out.dto';
+import VisitorRepository from 'src/database/repositories/visitor.repository';
 
 @Injectable()
 export class CheckIntOutService {
@@ -12,14 +21,24 @@ export class CheckIntOutService {
     private readonly checkInOutCollaboratorRepository: CheckInOutCollaboratorRepository,
     private readonly checkInOutVisitorRepository: CheckInOutVisitorRepository,
     private readonly checkInOutSuplierRepository: CheckInOutSuplierRepository,
+    private readonly visitorRepository: VisitorRepository,
   ) {}
 
-  create(createCheckIntOutDto: CreateCheckIntOutDto) {
-    return 'This action adds a new checkIntOut';
+  create(createCheckIntOutDto: CreateCheckInOutDto) {
+    return createCheckIntOutDto;
   }
 
   async findAll() {
-    const whereCollaborator: Prisma.check_in_out_collaboratorWhereInput = {};
+    const startDay = dayjs().startOf('d').toDate();
+    const endDay = dayjs().endOf('d').toDate();
+
+    const whereCollaborator: Prisma.check_in_out_collaboratorWhereInput = {
+      AND: [
+        { date_check_in: { gte: startDay } },
+        { date_check_in: { lte: endDay } },
+      ],
+    };
+
     const collaboratoresCheck = (
       await this.checkInOutCollaboratorRepository.findMany({
         where: whereCollaborator,
@@ -40,7 +59,12 @@ export class CheckIntOutService {
       return obj;
     });
 
-    const whereVisitor: Prisma.check_in_out_visitorWhereInput = {};
+    const whereVisitor: Prisma.check_in_out_visitorWhereInput = {
+      AND: [
+        { date_check_in: { gte: startDay } },
+        { date_check_in: { lte: endDay } },
+      ],
+    };
     const visitorCheck = (
       await this.checkInOutVisitorRepository.findMany({
         where: whereVisitor,
@@ -61,7 +85,13 @@ export class CheckIntOutService {
       return obj;
     });
 
-    const whereSuplier: Prisma.check_in_out_suplierWhereInput = {};
+    const whereSuplier: Prisma.check_in_out_suplierWhereInput = {
+      AND: [
+        { date_check_in: { gte: startDay } },
+        { date_check_in: { lte: endDay } },
+      ],
+    };
+
     const suplierCheck = (
       await this.checkInOutSuplierRepository.findMany({
         where: whereSuplier,
@@ -85,7 +115,131 @@ export class CheckIntOutService {
     return [...visitorCheck, ...collaboratoresCheck, ...suplierCheck];
   }
 
-  update(id: number, updateCheckIntOutDto: UpdateCheckIntOutDto) {
-    return `This action updates a #${id} checkIntOut`;
+  async registerCheckOut({ id, type }: UpdateCheckInOutDto) {
+    console.log(id, type);
+    if (type === TypeCheckCommon.visitor)
+      return await this.registerCheckOutVisitor(id);
+
+    if (type === TypeCheckCommon.suplier)
+      return await this.registerCheckOutSuplier(id);
+
+    if (type === TypeCheckCommon.collaborator)
+      return await this.registerCheckOutCollaborator(id);
+  }
+
+  async registerCheckIn({
+    collaborator_id,
+    document,
+    name,
+    plate,
+    suplier_id,
+    type,
+    visitor_id,
+  }: CreateCheckInOutDto) {
+    if (type === TypeCheckCommon.visitor)
+      return await this.registerCheckInVisitors({
+        name,
+        document,
+        plate,
+      });
+
+    if (type === TypeCheckCommon.suplier)
+      return await this.registerCheckInSuplier({
+        suplier_id,
+        plate,
+        name,
+        document,
+      });
+
+    if (type === TypeCheckCommon.collaborator)
+      return await this.registerCheckInCollaborator({ collaborator_id, plate });
+  }
+
+  async registerCheckInSuplier({ suplier_id, plate, name, document }: any) {
+    return await this.checkInOutSuplierRepository.create({
+      date_check_in: dayjs().toDate(),
+      name_employee: name,
+      rg_empoyee: document,
+      plate,
+      suplier: { connect: { id: suplier_id } },
+    });
+  }
+
+  async registerCheckInCollaborator({ collaborator_id, plate }: any) {
+    return await this.checkInOutCollaboratorRepository.create({
+      date_check_in: dayjs().toDate(),
+      plate,
+      collaborator: { connect: { id: collaborator_id } },
+    });
+  }
+
+  async registerCheckInVisitors({ name, document, plate }: any) {
+    console.log(document);
+    const visitor = await this.visitorRepository.findOne({
+      name: { contains: name },
+      rg: { equals: document },
+    });
+    console.log(visitor);
+    if (!visitor) {
+      throw new BadRequestException(
+        'Visitante não cadastrado. Realize o cadastro do visitante e depois tente novamente',
+      );
+    }
+
+    return await this.checkInOutVisitorRepository.create({
+      date_check_in: dayjs().toDate(),
+      plate,
+      visitor: { connect: { id: visitor.id } },
+    });
+  }
+
+  async registerCheckOutSuplier(id: number) {
+    console.log('saida suplier');
+    const suplier = await this.checkInOutSuplierRepository.findOne({
+      id,
+    });
+
+    if (!suplier) throw new NotFoundException(httpMessagesCommon.notFound);
+
+    if (suplier.date_check_out)
+      throw new BadRequestException('Saída já registrada anteriormente');
+
+    return await this.checkInOutSuplierRepository.update(id, {
+      date_check_out: dayjs().toDate(),
+    });
+  }
+
+  async registerCheckOutCollaborator(id: number) {
+    console.log('saida collaborator');
+
+    const collaborator = await this.checkInOutCollaboratorRepository.findOne({
+      id,
+    });
+
+    if (!collaborator) throw new NotFoundException(httpMessagesCommon.notFound);
+
+    if (collaborator.date_check_out)
+      throw new BadRequestException('Saída já registrada anteriormente');
+
+    return await this.checkInOutCollaboratorRepository.update(id, {
+      date_check_out: dayjs().toDate(),
+    });
+  }
+
+  async registerCheckOutVisitor(id: number) {
+    console.log('saida visitor');
+
+    const visitor = await this.checkInOutVisitorRepository.findOne({
+      id,
+    });
+
+    if (!visitor) throw new NotFoundException(httpMessagesCommon.notFound);
+
+    if (visitor.date_check_out)
+      throw new BadRequestException('Saída já registrada anteriormente');
+
+    return await this.checkInOutVisitorRepository.update(id, {
+      date_check_out: dayjs().toDate(),
+    });
   }
 }
