@@ -50,14 +50,14 @@ export class ColaboratorService {
       };
     }
 
-    const record = await this.collaboratorRepository.findMany(
+    const records = await this.collaboratorRepository.findMany(
       where,
       skip,
       take,
     );
     const total = await this.collaboratorRepository.count(where);
 
-    return { total, record };
+    return { total, records };
   }
 
   findOne(id: number) {
