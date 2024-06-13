@@ -26,6 +26,7 @@ export default class CheckInOutCollaboratorRepository {
       skip,
       take,
       include,
+      orderBy: { date_check_out: 'asc' },
     });
   }
 

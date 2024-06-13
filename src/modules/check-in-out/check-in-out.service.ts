@@ -210,8 +210,6 @@ export class CheckIntOutService {
   }
 
   async registerCheckOutCollaborator(id: number) {
-    console.log('saida collaborator');
-
     const collaborator = await this.checkInOutCollaboratorRepository.findOne({
       id,
     });
@@ -227,8 +225,6 @@ export class CheckIntOutService {
   }
 
   async registerCheckOutVisitor(id: number) {
-    console.log('saida visitor');
-
     const visitor = await this.checkInOutVisitorRepository.findOne({
       id,
     });
