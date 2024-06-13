@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateSuplierDto } from './dto/create-suplier.dto';
 import { UpdateSuplierDto } from './dto/update-suplier.dto';
 import SuplierRepository from 'src/database/repositories/suplier.respository';
@@ -8,8 +8,22 @@ import { Prisma } from '@prisma/client';
 @Injectable()
 export class SuplierService {
   constructor(private readonly suplierRepository: SuplierRepository) {}
-  create(createSuplierDto: CreateSuplierDto) {
-    return 'This action adds a new suplier';
+  async create({ CNPJ, name, phone }: CreateSuplierDto) {
+    const isCNPJalreadyExist = await this.suplierRepository.findOne({
+      CNPJ,
+    });
+
+    if (isCNPJalreadyExist)
+      throw new BadRequestException('Empresa já cadastrada');
+
+    const data: Prisma.suplierCreateInput = {
+      CNPJ,
+      name,
+      phone,
+      status: true,
+    };
+
+    return await this.suplierRepository.create(data);
   }
 
   async findAll({ search, CNPJ, skip, take }: FindManySuplierDto) {

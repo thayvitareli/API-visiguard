@@ -1,10 +1,10 @@
-import { IsString } from "class-validator";
+import { IsString } from 'class-validator';
 
 export class CreateSuplierDto {
-    @IsString()
-    name: string;
-    @IsString()
-    RG: string;
-    @IsString()
-    phone: string;
+  @IsString()
+  name: string;
+  @IsString()
+  phone: string;
+  @IsString()
+  CNPJ: string;
 }

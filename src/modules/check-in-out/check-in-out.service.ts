@@ -24,10 +24,6 @@ export class CheckIntOutService {
     private readonly visitorRepository: VisitorRepository,
   ) {}
 
-  create(createCheckIntOutDto: CreateCheckInOutDto) {
-    return createCheckIntOutDto;
-  }
-
   async findAll() {
     const startDay = dayjs().startOf('d').toDate();
     const endDay = dayjs().endOf('d').toDate();
@@ -106,8 +102,8 @@ export class CheckIntOutService {
         date_check_out: element.date_check_out,
         plate: element.plate,
         suplier_id: element.suplier_id,
-        name: element.suplier.name,
-        document: element.suplier.CNPJ,
+        name: element.name_employee,
+        document: element.rg_empoyee,
       };
       return obj;
     });
@@ -134,7 +130,6 @@ export class CheckIntOutService {
     plate,
     suplier_id,
     type,
-    visitor_id,
   }: CreateCheckInOutDto) {
     if (type === TypeCheckCommon.visitor)
       return await this.registerCheckInVisitors({
@@ -157,7 +152,7 @@ export class CheckIntOutService {
 
   async registerCheckInSuplier({ suplier_id, plate, name, document }: any) {
     return await this.checkInOutSuplierRepository.create({
-      date_check_in: dayjs().toDate(),
+      date_check_in: dayjs().subtract(3, 'h').toDate(),
       name_employee: name,
       rg_empoyee: document,
       plate,
@@ -167,14 +162,13 @@ export class CheckIntOutService {
 
   async registerCheckInCollaborator({ collaborator_id, plate }: any) {
     return await this.checkInOutCollaboratorRepository.create({
-      date_check_in: dayjs().toDate(),
+      date_check_in: dayjs().subtract(3, 'h').toDate(),
       plate,
       collaborator: { connect: { id: collaborator_id } },
     });
   }
 
   async registerCheckInVisitors({ name, document, plate }: any) {
-    console.log(document);
     const visitor = await this.visitorRepository.findOne({
       name: { contains: name },
       rg: { equals: document },
@@ -187,7 +181,7 @@ export class CheckIntOutService {
     }
 
     return await this.checkInOutVisitorRepository.create({
-      date_check_in: dayjs().toDate(),
+      date_check_in: dayjs().subtract(3, 'h').toDate(),
       plate,
       visitor: { connect: { id: visitor.id } },
     });
@@ -220,7 +214,7 @@ export class CheckIntOutService {
       throw new BadRequestException('Saída já registrada anteriormente');
 
     return await this.checkInOutCollaboratorRepository.update(id, {
-      date_check_out: dayjs().toDate(),
+      date_check_out: dayjs().subtract(3, 'h').toDate(),
     });
   }
 
@@ -235,7 +229,7 @@ export class CheckIntOutService {
       throw new BadRequestException('Saída já registrada anteriormente');
 
     return await this.checkInOutVisitorRepository.update(id, {
-      date_check_out: dayjs().toDate(),
+      date_check_out: dayjs().subtract(3, 'h').toDate(),
     });
   }
 }

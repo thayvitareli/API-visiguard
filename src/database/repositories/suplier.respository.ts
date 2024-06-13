@@ -25,6 +25,16 @@ export default class SuplierRepository {
     });
   }
 
+  async findOne(
+    where: Prisma.suplierWhereInput,
+    select?: Prisma.suplierSelect,
+  ) {
+    return await this.prisma.suplier.findFirst({
+      where,
+      select,
+    });
+  }
+
   async count(where: Prisma.suplierWhereInput) {
     return await this.prisma.suplier.count({ where });
   }
