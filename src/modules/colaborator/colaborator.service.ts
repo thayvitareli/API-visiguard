@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateColaboratorDto } from './dto/create-colaborator.dto';
-import { UpdateColaboratorDto } from './dto/update-colaborator.dto';
 import { FindManyCollaboratorDto } from './dto/find-many-collaborator.dto';
 import { Prisma } from '@prisma/client';
 import CollaboratorRepository from 'src/database/repositories/collaborator.repository';
 import UserRepository from 'src/database/repositories/user.repository';
+import { Collaborator } from './entities/collaborator.entity';
 
 @Injectable()
 export class ColaboratorService {
@@ -50,25 +50,24 @@ export class ColaboratorService {
       };
     }
 
-    const records = await this.collaboratorRepository.findMany(
+    const select: Prisma.collaboratorSelect = {
+      id: true,
+      name: true,
+      register_employ: true,
+      department: true,
+      position: true,
+      created_at: true,
+      updated_at: true,
+    };
+
+    const records: Collaborator[] = await this.collaboratorRepository.findMany(
       where,
       skip,
       take,
+      select,
     );
     const total = await this.collaboratorRepository.count(where);
 
     return { total, records };
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} colaborator`;
-  }
-
-  update(id: number, updateColaboratorDto: UpdateColaboratorDto) {
-    return `This action updates a #${id} colaborator`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} colaborator`;
   }
 }
