@@ -112,7 +112,6 @@ export class CheckIntOutService {
   }
 
   async registerCheckOut({ id, type }: UpdateCheckInOutDto) {
-    console.log(id, type);
     if (type === TypeCheckCommon.visitor)
       return await this.registerCheckOutVisitor(id);
 
@@ -171,9 +170,9 @@ export class CheckIntOutService {
   async registerCheckInVisitors({ name, document, plate }: any) {
     const visitor = await this.visitorRepository.findOne({
       name: { contains: name },
-      rg: { equals: document },
+      rg: { contains: document },
     });
-    console.log(visitor);
+
     if (!visitor) {
       throw new BadRequestException(
         'Visitante não cadastrado. Realize o cadastro do visitante e depois tente novamente',
@@ -188,7 +187,6 @@ export class CheckIntOutService {
   }
 
   async registerCheckOutSuplier(id: number) {
-    console.log('saida suplier');
     const suplier = await this.checkInOutSuplierRepository.findOne({
       id,
     });
