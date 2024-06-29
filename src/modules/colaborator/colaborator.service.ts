@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -34,7 +35,7 @@ export class ColaboratorService {
       throw new BadRequestException('Registro de colaborador já cadastrado');
 
     if (!user.privilege)
-      throw new UnauthorizedException(
+      throw new ForbiddenException(
         'Acesso Negado. Você não possui acesso a essa função',
       );
 
