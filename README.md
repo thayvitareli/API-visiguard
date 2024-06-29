@@ -6,5 +6,5 @@
 <p>
   Nesta etapa, estou desenvolvendo sua API utilizando o framework NestJS e o Prisma ORM com MySQL para a persistência de dados.</p>
   <p>
- <b>Atenção:</b> o aquivo .env está vísivel apenas para fins ilustrativos do projeto, <b><i>não é recomendado sua exposição pública.</i></b>
+ <b>Atenção:</b> o arquivo .env está vísivel apenas para fins ilustrativos do projeto, <b><i>não é recomendado sua exposição pública.</i></b>
 </p>
