@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateColaboratorDto } from './dto/create-colaborator.dto';
 import { FindManyCollaboratorDto } from './dto/find-many-collaborator.dto';
 import { Prisma } from '@prisma/client';
@@ -30,7 +34,7 @@ export class ColaboratorService {
       throw new BadRequestException('Registro de colaborador já cadastrado');
 
     if (!user.privilege)
-      throw new BadRequestException(
+      throw new UnauthorizedException(
         'Acesso Negado. Você não possui acesso a essa função',
       );
 
