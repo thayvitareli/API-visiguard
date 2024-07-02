@@ -6,6 +6,14 @@ import { Prisma } from '@prisma/client';
 export default class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  async create(data:Prisma.userCreateInput){
+    return await this.prisma.user.create({data})
+  }
+
+  async findMany({where}: {where?:Prisma.userWhereInput}){
+    return await this.prisma.user.findMany({where})
+  }
+
   async findOne(where: Prisma.userWhereInput, select?: Prisma.userSelect) {
     return await this.prisma.user.findFirst({ where, select });
   }

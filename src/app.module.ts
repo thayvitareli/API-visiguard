@@ -10,6 +10,7 @@ import { SuplierModule } from './modules/suplier/suplier.module';
 import { ColaboratorModule } from './modules/colaborator/colaborator.module';
 import { VisitorModule } from './modules/visitor/visitor.module';
 import { CheckInOutModule } from './modules/check-in-out/check-in-out.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CheckInOutModule } from './modules/check-in-out/check-in-out.module';
     ColaboratorModule,
     VisitorModule,
     CheckInOutModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
