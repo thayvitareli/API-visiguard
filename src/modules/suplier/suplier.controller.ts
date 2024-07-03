@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Request,
 } from '@nestjs/common';
 import { SuplierService } from './suplier.service';
 import { CreateSuplierDto } from './dto/create-suplier.dto';
@@ -18,8 +19,9 @@ export class SuplierController {
   constructor(private readonly suplierService: SuplierService) {}
 
   @Post()
-  create(@Body() createSuplierDto: CreateSuplierDto) {
-    return this.suplierService.create(createSuplierDto);
+  create(@Body() createSuplierDto: CreateSuplierDto, @Request() req) {
+    const {userId} = req.user;
+    return this.suplierService.create(createSuplierDto,userId );
   }
 
   @Get()

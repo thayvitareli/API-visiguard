@@ -1,14 +1,29 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateSuplierDto } from './dto/create-suplier.dto';
 import { UpdateSuplierDto } from './dto/update-suplier.dto';
 import SuplierRepository from 'src/database/repositories/suplier.respository';
 import { FindManySuplierDto } from './dto/find-many-suplier-dto';
 import { Prisma } from '@prisma/client';
+import UserRepository from 'src/database/repositories/user.repository';
 
 @Injectable()
 export class SuplierService {
-  constructor(private readonly suplierRepository: SuplierRepository) {}
-  async create({ CNPJ, name, phone }: CreateSuplierDto) {
+  constructor(private readonly suplierRepository: SuplierRepository,
+    private readonly userRepository: UserRepository
+  ) {}
+  async create({ CNPJ, name, phone }: CreateSuplierDto, userId: number) {
+
+    
+    const user = await this.userRepository.findOne({ id: userId });
+
+    if(!user){
+      throw new UnauthorizedException('Necessário fornecer autenticação para essa solicitação');
+    }
+  
+    if(!user.privilege){
+      throw new ForbiddenException('Acesso negado, você não possui permissão de acesso a essa funcionalidade');
+    }
+
     const isCNPJalreadyExist = await this.suplierRepository.findOne({
       CNPJ,
     });
