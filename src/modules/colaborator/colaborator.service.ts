@@ -43,10 +43,6 @@ export class ColaboratorService {
     if (alreadExistRegisterEmploy)
       throw new BadRequestException('Registro de colaborador já cadastrado');
 
-    if (!user.privilege)
-      throw new ForbiddenException(
-        'Acesso Negado. Você não possui acesso a essa função',
-      );
 
     return await this.collaboratorRepository.create(data);
   }
