@@ -20,7 +20,7 @@ export class ColaboratorController {
   @Post()
   create(@Body() createColaboratorDto: CreateColaboratorDto, @Request() req) {
     const { userId } = req.user;
-    return this.colaboratorService.create(createColaboratorDto, userId.userId);
+    return this.colaboratorService.create(createColaboratorDto, userId);
   }
 
   @Get()

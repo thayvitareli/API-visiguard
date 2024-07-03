@@ -18,6 +18,7 @@ export class ColaboratorService {
     private readonly userRepository: UserRepository,
   ) {}
   async create(createColaboratorDto: CreateColaboratorDto, userId: number) {
+
     const data: Prisma.collaboratorCreateInput = {
       name: createColaboratorDto.name,
       department: createColaboratorDto.departament,
@@ -26,6 +27,14 @@ export class ColaboratorService {
     };
 
     const user = await this.userRepository.findOne({ id: userId });
+
+    if(!user){
+      throw new UnauthorizedException('Necessário fornecer autenticação para essa solicitação');
+    }
+  
+    if(!user.privilege){
+      throw new ForbiddenException('Acesso negado, você não possui permissão de acesso a essa funcionalidade');
+    }
 
     const alreadExistRegisterEmploy = await this.collaboratorRepository.findOne(
       { register_employ: createColaboratorDto.register_employee },
