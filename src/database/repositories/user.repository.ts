@@ -11,7 +11,13 @@ export default class UserRepository {
   }
 
   async findMany({where}: {where?:Prisma.userWhereInput}){
-    return await this.prisma.user.findMany({where})
+    return await this.prisma.user.findMany({where, select:{
+      id:true,
+      CPF: true,
+      name: true,
+      privilege: true,
+      created_at: true,
+    }})
   }
 
   async findOne(where: Prisma.userWhereInput, select?: Prisma.userSelect) {

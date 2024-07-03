@@ -44,7 +44,10 @@ export class UserService {
       throw new ForbiddenException('Acesso negado, você não possui permissão de acesso a essa funcionalidade');
     }
 
-    return await this.userRepository.findMany({});
+    const users = await this.userRepository.findMany({})
+
+    return { records: users}
+   };
   }
 
-}
+
