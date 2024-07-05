@@ -7,10 +7,10 @@ import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { SuplierModule } from './modules/suplier/suplier.module';
-import { ColaboratorModule } from './modules/colaborator/colaborator.module';
 import { VisitorModule } from './modules/visitor/visitor.module';
 import { CheckInOutModule } from './modules/check-in-out/check-in-out.module';
 import { UserModule } from './modules/user/user.module';
+import { CollaboratorModule } from './modules/collaborator/collaborator.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { UserModule } from './modules/user/user.module';
     DatabaseModule,
     VehicleModule,
     SuplierModule,
-    ColaboratorModule,
+    CollaboratorModule,
     VisitorModule,
     CheckInOutModule,
     UserModule,

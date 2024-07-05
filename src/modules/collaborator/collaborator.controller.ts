@@ -9,22 +9,22 @@ import {
   Delete,
   Request,
 } from '@nestjs/common';
-import { ColaboratorService } from './colaborator.service';
+import { CollaboratorService } from './collaborator.service';
 import { CreateColaboratorDto } from './dto/create-colaborator.dto';
 import { FindManyCollaboratorDto } from './dto/find-many-collaborator.dto';
 
 @Controller('collaborator')
 export class ColaboratorController {
-  constructor(private readonly colaboratorService: ColaboratorService) {}
+  constructor(private readonly CollaboratorService: CollaboratorService) {}
 
   @Post()
   create(@Body() createColaboratorDto: CreateColaboratorDto, @Request() req) {
     const { userId } = req.user;
-    return this.colaboratorService.create(createColaboratorDto, userId);
+    return this.CollaboratorService.create(createColaboratorDto, userId);
   }
 
   @Get()
   findAll(@Query() findMany: FindManyCollaboratorDto) {
-    return this.colaboratorService.findAll(findMany);
+    return this.CollaboratorService.findAll(findMany);
   }
 }

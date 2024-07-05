@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ColaboratorController } from './colaborator.controller';
-import { ColaboratorService } from './colaborator.service';
+import { ColaboratorController } from './collaborator.controller';
+import { ColaboratorService } from './collaborator.service';
 import { CreateColaboratorDto } from './dto/create-colaborator.dto';
 
 describe('ColaboratorController', () => {

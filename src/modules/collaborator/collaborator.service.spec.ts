@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ColaboratorService } from './colaborator.service';
+import { CollaboratorService } from './collaborator.service';
 import UserRepository from '../../database/repositories/user.repository';
 import CollaboratorRepository from '../../database/repositories/collaborator.repository';
 import { CreateColaboratorDto } from './dto/create-colaborator.dto';
@@ -7,15 +7,15 @@ import { Collaborator } from './entities/collaborator.entity';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { collaboratorsMock, findManyMock, totalMock } from './mocks/collaborator.mock';
 
-describe('ColaboratorService', () => {
-  let collaboratorService: ColaboratorService;
+describe('Collaborator Service', () => {
+  let collaboratorService: CollaboratorService;
   let mockUserRepository: UserRepository;
   let mockCollaboratorRepository: CollaboratorRepository;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ColaboratorService,
+        CollaboratorService,
         {
           provide: UserRepository,
           useValue: {
@@ -34,7 +34,7 @@ describe('ColaboratorService', () => {
       ],
     }).compile();
 
-    collaboratorService = module.get<ColaboratorService>(ColaboratorService);
+    collaboratorService = module.get<CollaboratorService>(CollaboratorService);
     mockUserRepository = module.get<UserRepository>(UserRepository);
     mockCollaboratorRepository = module.get<CollaboratorRepository>(
       CollaboratorRepository,

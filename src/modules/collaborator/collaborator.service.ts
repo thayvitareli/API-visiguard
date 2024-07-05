@@ -12,7 +12,7 @@ import UserRepository from 'src/database/repositories/user.repository';
 import { Collaborator } from './entities/collaborator.entity';
 
 @Injectable()
-export class ColaboratorService {
+export class CollaboratorService {
   constructor(
     private readonly collaboratorRepository: CollaboratorRepository,
     private readonly userRepository: UserRepository,
