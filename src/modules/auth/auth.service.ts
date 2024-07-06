@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   async validateUser({ cpf, password }: LoginDto) {
-    const user = await this.userRepository.findOne({ CPF: cpf });
+    const user = await this.userRepository.findOne({ CPF: cpf, status: true });
     if (user) {
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (isValidPassword) return user;
