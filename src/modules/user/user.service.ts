@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
+ 
   constructor(private readonly userRepository: UserRepository){}
  
  async create({ CPF,name,password,privilege}: CreateUserDto, userId:number) {
@@ -44,10 +45,63 @@ export class UserService {
       throw new ForbiddenException('Acesso negado, você não possui permissão de acesso a essa funcionalidade');
     }
 
-    const users = await this.userRepository.findMany({})
+    const users = await this.userRepository.findMany({
+      where: {
+        status: true,
+      }
+    })
 
     return { records: users}
    };
+
+   async update(requestUserId: number, updateUserDto: UpdateUserDto) {
+    const isRequestUserAdmin = await this.userRepository.findOne({ id: requestUserId , privilege: 1})
+
+    if(!isRequestUserAdmin){
+      throw new ForbiddenException('Acesso negado, você não possui permissão de acesso a essa funcionalidade');
+    }
+
+    let data:Prisma.userUpdateInput = {}
+
+    if(updateUserDto.name){
+      data = {...data, name: updateUserDto.name}
+    }
+
+    if(updateUserDto.password){
+      const password = await bcrypt.hash(updateUserDto.password, Number(process.env.SALT))
+      data = {...data, password: password}
+    }
+
+    if(updateUserDto.privilege){
+      data = {...data, privilege: updateUserDto.privilege}
+    }
+  
+    await this.userRepository.update(updateUserDto.id, data)
+
+    return {message: 'Operação realizada com sucesso'}
+
+  }
+
+   async remove(id: number, requestUserId: number) {
+    const isRequestUserAdmin = await this.userRepository.findOne({ id: requestUserId , privilege: 1})
+
+    if(!isRequestUserAdmin){
+      throw new ForbiddenException('Acesso negado, você não possui permissão de acesso a essa funcionalidade');
+    }
+
+    const userUpdate = await this.userRepository.findOne({ id })
+
+    if(!userUpdate){
+      throw new UnauthorizedException('Usuário não encontrado');
+    }
+
+    await this.userRepository.update(id, {
+      status:false
+    })
+
+    return {message: 'Operação realizada com sucesso'}
+
+  }
   }
 
 

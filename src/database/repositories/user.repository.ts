@@ -23,4 +23,11 @@ export default class UserRepository {
   async findOne(where: Prisma.userWhereInput, select?: Prisma.userSelect) {
     return await this.prisma.user.findFirst({ where, select });
   }
+
+  async update(id:number, data: Prisma.userUpdateInput){
+    return await this.prisma.user.update({
+      where:{id},
+      data
+    })
+  }
 }

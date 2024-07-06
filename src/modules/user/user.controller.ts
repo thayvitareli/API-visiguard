@@ -20,5 +20,18 @@ export class UserController {
     return this.userService.findAll(userId);
   }
 
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto,  @Request() req) {
+    const {userId} = req.user;
+    updateUserDto = {...updateUserDto, id: Number(id)}
+    return this.userService.update(userId, updateUserDto);
+  }
+
+  
+  @Delete(':id')
+  remove(@Param('id') id: string,  @Request() req) {
+    const {userId} = req.user;
+    return this.userService.remove(Number(id), userId);
+  }
 
 }
