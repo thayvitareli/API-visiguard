@@ -20,6 +20,8 @@ model user {
   CPF       String @unique @db.Char(11)
   privilege Int    @db.TinyInt
 
+  status Boolean @default(true)
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   report     report[]
