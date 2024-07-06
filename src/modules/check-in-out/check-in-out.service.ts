@@ -14,6 +14,7 @@ import httpMessagesCommon from 'src/common/http-messages.common';
 import * as dayjs from 'dayjs';
 import { CreateCheckInOutDto } from './dto/create-check-in-out.dto';
 import VisitorRepository from 'src/database/repositories/visitor.repository';
+import { FindManyCheckDto } from './dto/find-many-check.dto';
 
 @Injectable()
 export class CheckIntOutService {
@@ -24,9 +25,9 @@ export class CheckIntOutService {
     private readonly visitorRepository: VisitorRepository,
   ) {}
 
-  async findAll() {
-    const startDay = dayjs().startOf('d').toDate();
-    const endDay = dayjs().endOf('d').toDate();
+  async findAll({from, to}: FindManyCheckDto) {
+    const startDay = from ? dayjs(from).subtract(3,'h').startOf('d').toDate() : dayjs().subtract(3,'h').startOf('d').toDate();
+    const endDay = to ? dayjs(to).subtract(3,'h').endOf('d').toDate() : dayjs().subtract(3,'h').endOf('d').toDate();
 
     const whereCollaborator: Prisma.check_in_out_collaboratorWhereInput = {
       AND: [
@@ -34,7 +35,7 @@ export class CheckIntOutService {
         { date_check_in: { lte: endDay } },
       ],
     };
-
+    
     const collaboratoresCheck = (
       await this.checkInOutCollaboratorRepository.findMany({
         where: whereCollaborator,
