@@ -25,9 +25,13 @@ export class CheckIntOutService {
     private readonly visitorRepository: VisitorRepository,
   ) {}
 
-  async findAll({from, to}: FindManyCheckDto) {
-    const startDay = from ? dayjs(from).subtract(3,'h').startOf('d').toDate() : dayjs().subtract(3,'h').startOf('d').toDate();
-    const endDay = to ? dayjs(to).subtract(3,'h').endOf('d').toDate() : dayjs().subtract(3,'h').endOf('d').toDate();
+  async findAll({ from, to }: FindManyCheckDto) {
+    const startDay = from
+      ? dayjs(from).subtract(3, 'h').startOf('d').toDate()
+      : dayjs().subtract(3, 'h').startOf('d').toDate();
+    const endDay = to
+      ? dayjs(to).subtract(3, 'h').endOf('d').toDate()
+      : dayjs().subtract(3, 'h').endOf('d').toDate();
 
     const whereCollaborator: Prisma.check_in_out_collaboratorWhereInput = {
       AND: [
@@ -35,7 +39,7 @@ export class CheckIntOutService {
         { date_check_in: { lte: endDay } },
       ],
     };
-    
+
     const collaboratoresCheck = (
       await this.checkInOutCollaboratorRepository.findMany({
         where: whereCollaborator,

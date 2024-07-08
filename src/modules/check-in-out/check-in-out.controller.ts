@@ -20,7 +20,6 @@ export class CheckIntOutController {
 
   @Patch()
   update(@Body() updateCheckInOutDto: UpdateCheckInOutDto) {
-    console.log('Controller ', updateCheckInOutDto);
     return this.checkInOutService.registerCheckOut(updateCheckInOutDto);
   }
 }

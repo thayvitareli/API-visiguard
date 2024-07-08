@@ -4,7 +4,7 @@ import { VehicleController } from './vehicle.controller';
 import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
-  imports:[DatabaseModule],
+  imports: [DatabaseModule],
   controllers: [VehicleController],
   providers: [VehicleService],
 })

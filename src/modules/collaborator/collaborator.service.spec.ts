@@ -5,7 +5,11 @@ import CollaboratorRepository from '../../database/repositories/collaborator.rep
 import { CreateColaboratorDto } from './dto/create-colaborator.dto';
 import { Collaborator } from './entities/collaborator.entity';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
-import { collaboratorsMock, findManyMock, totalMock } from './mocks/collaborator.mock';
+import {
+  collaboratorsMock,
+  findManyMock,
+  totalMock,
+} from './mocks/collaborator.mock';
 
 describe('Collaborator Service', () => {
   let collaboratorService: CollaboratorService;
@@ -28,7 +32,7 @@ describe('Collaborator Service', () => {
             findMany: jest.fn(),
             findOne: jest.fn(),
             create: jest.fn(),
-            count: jest.fn()
+            count: jest.fn(),
           },
         },
       ],
@@ -51,17 +55,20 @@ describe('Collaborator Service', () => {
 
   describe('findAll', () => {
     it('should return a list of collaborators', async () => {
-      
-     jest
+      jest
         .spyOn(mockCollaboratorRepository, 'findMany')
-        .mockImplementation(() => Promise.resolve(collaboratorsMock as any))
+        .mockImplementation(() => Promise.resolve(collaboratorsMock as any));
       jest
         .spyOn(mockCollaboratorRepository, 'count')
-        .mockImplementation(() => Promise.resolve(collaboratorsMock.length))
+        .mockImplementation(() => Promise.resolve(collaboratorsMock.length));
 
-      const result = await collaboratorService.findAll({search:"",skip:0,take:10})
+      const result = await collaboratorService.findAll({
+        search: '',
+        skip: 0,
+        take: 10,
+      });
 
-      expect(result).toEqual(findManyMock)
+      expect(result).toEqual(findManyMock);
     });
 
     it('should return an empty list of collaborators', async () => {
@@ -71,18 +78,17 @@ describe('Collaborator Service', () => {
         .spyOn(mockCollaboratorRepository, 'findMany')
         .mockImplementation(() => Promise.resolve([]));
 
-        jest.spyOn(mockCollaboratorRepository, 'count')
-        .mockImplementation(() => Promise.resolve(0))
+      jest
+        .spyOn(mockCollaboratorRepository, 'count')
+        .mockImplementation(() => Promise.resolve(0));
 
       const result = await collaboratorService.findAll({
         search: '',
         skip: 0,
         take: 10,
-      })
+      });
 
-      expect(
-        result
-      ).toEqual({
+      expect(result).toEqual({
         total: expect.any(Number),
         records: expect.arrayContaining([]),
       });
@@ -127,7 +133,7 @@ describe('Collaborator Service', () => {
         }),
       );
 
-      const result = await collaboratorService.create(data, userId)
+      const result = await collaboratorService.create(data, userId);
 
       expect(result).toEqual(
         expect.objectContaining({
