@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SuplierService } from './suplier.service';
 import UserRepository from '../../database/repositories/user.repository';
-import SuplierRepository from 'src/database/repositories/suplier.respository';
+import SuplierRepository from '../../database/repositories/suplier.respository';
 import {
   createSuplierDto,
   findUserMock,
@@ -25,7 +25,7 @@ describe('SuplierService', () => {
         {
           provide: UserRepository,
           useValue: {
-            findOne: jest.fn().mockResolvedValue(findUserMock),
+            findOne: jest.fn(),
           },
         },
         {
@@ -49,16 +49,17 @@ describe('SuplierService', () => {
     userRepositoryMock = module.get<UserRepository>(UserRepository);
   });
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
-
   it('should be defined', () => {
     expect(suplierService).toBeDefined();
   });
 
   describe('Create', () => {
     it('Should create a Suplier', async () => {
+      jest
+        .spyOn(userRepositoryMock, 'findOne')
+        //@ts-ignore
+        .mockResolvedValueOnce(findUserMock);
+
       jest.spyOn(suplierRepositoryMock, 'findOne').mockResolvedValueOnce(null);
       const result = await suplierService.create(createSuplierDto, 1);
 
@@ -90,6 +91,11 @@ describe('SuplierService', () => {
     });
 
     it('Should throw an error - CNPJ already registered', async () => {
+      jest
+        .spyOn(userRepositoryMock, 'findOne')
+        //@ts-ignore
+        .mockResolvedValueOnce(findUserMock);
+
       jest
         .spyOn(suplierRepositoryMock, 'findOne')
         //@ts-ignore
