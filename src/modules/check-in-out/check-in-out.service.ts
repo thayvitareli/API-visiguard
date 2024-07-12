@@ -1,7 +1,9 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 
 import CheckInOutCollaboratorRepository from 'src/database/repositories/check_in_out_collaborator.repository';
@@ -16,6 +18,7 @@ import { CreateCheckInOutDto } from './dto/create-check-in-out.dto';
 import VisitorRepository from 'src/database/repositories/visitor.repository';
 import { FindManyCheckDto } from './dto/find-many-check.dto';
 import { Workbook } from 'exceljs';
+import UserRepository from 'src/database/repositories/user.repository';
 
 @Injectable()
 export class CheckIntOutService {
@@ -24,6 +27,7 @@ export class CheckIntOutService {
     private readonly checkInOutVisitorRepository: CheckInOutVisitorRepository,
     private readonly checkInOutSuplierRepository: CheckInOutSuplierRepository,
     private readonly visitorRepository: VisitorRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async findAll({ from, to }: FindManyCheckDto) {
@@ -237,7 +241,15 @@ export class CheckIntOutService {
     });
   }
 
-  async export({ from, to }: FindManyCheckDto) {
+  async exportToXLSX({ from, to }: FindManyCheckDto, userId: number) {
+    const user = await this.userRepository.findOne({ id: userId });
+
+    if (!user.privilege) {
+      throw new ForbiddenException(
+        'Acesso negado, você não possui permissão de acesso a essa funcionalidade',
+      );
+    }
+
     const result = await this.findAll({ from, to });
 
     const workbook = new Workbook();
