@@ -15,6 +15,7 @@ import * as dayjs from 'dayjs';
 import { CreateCheckInOutDto } from './dto/create-check-in-out.dto';
 import VisitorRepository from 'src/database/repositories/visitor.repository';
 import { FindManyCheckDto } from './dto/find-many-check.dto';
+import { Workbook } from 'exceljs';
 
 @Injectable()
 export class CheckIntOutService {
@@ -234,5 +235,54 @@ export class CheckIntOutService {
     return await this.checkInOutVisitorRepository.update(id, {
       date_check_out: dayjs().subtract(3, 'h').toDate(),
     });
+  }
+
+  async export({ from, to }: FindManyCheckDto) {
+    const result = await this.findAll({ from, to });
+
+    const workbook = new Workbook();
+
+    const worksheet = workbook.addWorksheet('histórico de entradas e saídas');
+
+    worksheet.columns = [
+      { header: 'Nome', key: 'name', width: 20 },
+      { header: 'Documento', key: 'document', width: 20 },
+      { header: 'Tipo', key: 'type', width: 20 },
+      { header: 'Placa', key: 'plate', width: 20 },
+      { header: 'Hora entrada', key: 'checkin', width: 20 },
+      { header: 'Hora saída', key: 'checkout', width: 20 },
+    ];
+
+    result.forEach((register) => {
+      const type = this.typeRegister(register);
+
+      worksheet.addRow({
+        name: register.name,
+        document: register.document,
+        type: type,
+        plate: register.plate,
+        checkin: register.date_check_in,
+        checkout: register.date_check_out,
+      });
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+
+    const file = {
+      name: `historico-${dayjs(from).format('DD-MM-YYYY')}-${dayjs(to).format('DD-MM-YYYY')}.xlsx`,
+      mimetype:
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      buffer,
+    };
+    return file;
+  }
+
+  typeRegister(register) {
+    let type = '';
+    type = register.visitor_id ? 'Visitante' : type;
+    type = register.collaborator_id ? 'Colaborador' : type;
+    type = register.suplier_id ? 'Prestador serviço' : type;
+
+    return type;
   }
 }

@@ -22,4 +22,9 @@ export class CheckIntOutController {
   update(@Body() updateCheckInOutDto: UpdateCheckInOutDto) {
     return this.checkInOutService.registerCheckOut(updateCheckInOutDto);
   }
+
+  @Get('export')
+  export(@Query() findMany: FindManyCheckDto) {
+    return this.checkInOutService.export(findMany);
+  }
 }
