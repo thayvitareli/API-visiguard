@@ -6,19 +6,19 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import CheckInOutCollaboratorRepository from 'src/database/repositories/check_in_out_collaborator.repository';
+import CheckInOutCollaboratorRepository from '../../../src/database/repositories/check_in_out_collaborator.repository';
 import { Prisma } from '@prisma/client';
-import CheckInOutVisitorRepository from 'src/database/repositories/check_in_out_visitor.repository copy';
-import CheckInOutSuplierRepository from 'src/database/repositories/check_in_out_suplier.repository';
+import CheckInOutVisitorRepository from '../../../src/database/repositories/check_in_out_visitor.repository copy';
+import CheckInOutSuplierRepository from '../../../src/database/repositories/check_in_out_suplier.repository';
 import { UpdateCheckInOutDto } from './dto/update-check-in-out.dto';
-import { TypeCheckCommon } from 'src/common/typeChecks.common';
-import httpMessagesCommon from 'src/common/http-messages.common';
+import { TypeCheckCommon } from '../../../src/common/typeChecks.common';
+import httpMessagesCommon from '../../../src/common/http-messages.common';
 import * as dayjs from 'dayjs';
 import { CreateCheckInOutDto } from './dto/create-check-in-out.dto';
-import VisitorRepository from 'src/database/repositories/visitor.repository';
+import VisitorRepository from '../../../src/database/repositories/visitor.repository';
 import { FindManyCheckDto } from './dto/find-many-check.dto';
 import { Workbook } from 'exceljs';
-import UserRepository from 'src/database/repositories/user.repository';
+import UserRepository from '../../../src/database/repositories/user.repository';
 
 @Injectable()
 export class CheckIntOutService {

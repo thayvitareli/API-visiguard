@@ -7,8 +7,8 @@ import {
 import { CreateColaboratorDto } from './dto/create-colaborator.dto';
 import { FindManyCollaboratorDto } from './dto/find-many-collaborator.dto';
 import { Prisma } from '@prisma/client';
-import CollaboratorRepository from 'src/database/repositories/collaborator.repository';
-import UserRepository from 'src/database/repositories/user.repository';
+import CollaboratorRepository from '../../../src/database/repositories/collaborator.repository';
+import UserRepository from '../../../src/database/repositories/user.repository';
 import { Collaborator } from './entities/collaborator.entity';
 
 @Injectable()

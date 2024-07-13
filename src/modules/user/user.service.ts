@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import UserRepository from 'src/database/repositories/user.repository';
+import UserRepository from '../../database/repositories/user.repository';
 import { Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 

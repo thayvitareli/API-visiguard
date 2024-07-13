@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
-import VehicleRepository from 'src/database/repositories/vehicle.repository';
+import VehicleRepository from '../../../src/database/repositories/vehicle.repository';
 import { Prisma } from '@prisma/client';
 import { FindManyVeicheDto } from './dto/find-many-veichle.dto';
 

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateVisitorDto } from './dto/create-visitor.dto';
 import { UpdateVisitorDto } from './dto/update-visitor.dto';
-import VisitorRepository from 'src/database/repositories/visitor.repository';
+import VisitorRepository from '../../../src/database/repositories/visitor.repository';
 import { Prisma } from '@prisma/client';
 import { FindManyVisitorDto } from './dto/find-many-visitor-dto';
 
