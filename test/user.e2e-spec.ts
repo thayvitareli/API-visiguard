@@ -123,4 +123,70 @@ describe('User Controller (e2e)', () => {
         });
     });
   });
+
+  describe('/user (POST)', () => {
+    it('Should return 201 - created', async () => {
+      return request(app.getHttpServer())
+        .post('/user')
+        .send({
+          CPF: '123.125.452-74',
+          name: 'Joana Darc',
+          password: 'minhasenhasupersecreta123',
+          privilege: 0,
+        })
+        .set('Authorization', `Bearer ${access_token_admin}`)
+        .then((response) => {
+          expect(response.status).toBe(201);
+        });
+    });
+
+    it('Should return 400 - Unauthorized', async () => {
+      return request(app.getHttpServer())
+        .post('/user')
+        .send({
+          CPF: '123.125.452-74',
+          name: 'Joana Darc',
+          password: 'minhasenhasupersecreta123',
+          privilege: 0,
+        })
+        .then((response) => {
+          expect(response.status).toBe(401);
+        });
+    });
+
+    it('Should return 403 - Forbidden', async () => {
+      return request(app.getHttpServer())
+        .post('/user')
+        .send({
+          CPF: '123.125.452-74',
+          name: 'Joana Darc',
+          password: 'minhasenhasupersecreta123',
+          privilege: 0,
+        })
+        .set('Authorization', `Bearer ${access_token_common}`)
+        .then((response) => {
+          expect(response.status).toBe(403);
+        });
+    });
+
+    it('Should return 400 - Bad Request - missing attribute in body', async () => {
+      return request(app.getHttpServer())
+        .post('/user')
+        .send({
+          CPF: '123.125.452-74',
+          name: 'Joana Darc',
+          privilege: 0,
+        })
+        .set('Authorization', `Bearer ${access_token_common}`)
+        .then((response) => {
+          expect(response.status).toBe(400);
+          expect(response.body?.message).toEqual([
+            'password should not be empty',
+            'password must be a string',
+          ]);
+        });
+    });
+
+    //end
+  });
 });
