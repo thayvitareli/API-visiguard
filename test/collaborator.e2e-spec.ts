@@ -16,7 +16,7 @@ interface User {
   updated_at: Date;
 }
 
-describe('User Controller (e2e)', () => {
+describe('Collaborator Controller (e2e)', () => {
   let app: INestApplication;
   let prismaService: PrismaService;
   let jwtService: JwtService;
@@ -45,6 +45,7 @@ describe('User Controller (e2e)', () => {
 
   beforeEach(async () => {
     await prismaService.user.deleteMany();
+    await prismaService.collaborator.deleteMany();
 
     userAdmin = await prismaService.user.create({
       data: {
@@ -72,65 +73,26 @@ describe('User Controller (e2e)', () => {
     });
   });
 
-  describe('/user (GET)', () => {
-    it('Should return status 200 - list of users', async () => {
+  describe('/collaborator (GET)', () => {
+    it('Should return status 200 - list of collaborators', async () => {
       return request(app.getHttpServer())
-        .get('/user')
+        .get('/collaborator')
         .set('Authorization', `Bearer ${access_token_admin}`)
         .then((response) => {
-          expect(response.body).toEqual({
-            records: [
-              {
-                id: expect.any(Number),
-                CPF: '11111111111',
-                name: 'Rafael Oliveira',
-                privilege: 1,
-                created_at: expect.any(String),
-              },
-              {
-                id: expect.any(Number),
-                CPF: '11111111112',
-                name: 'João da Silva',
-                privilege: 0,
-                created_at: expect.any(String),
-              },
-            ],
-          });
-
           expect(response.status).toBe(200);
-        });
-    });
-
-    it('Should return a status 401 - Unauthorized', () => {
-      return request(app.getHttpServer())
-        .get('/user')
-        .then((response) => {
-          expect(response.status).toBe(401);
-          expect(response.text).toBe(
-            '{"message":"Unauthorized","statusCode":401}',
-          );
-        });
-    });
-
-    it('Should return a status 403 - Forbidden', () => {
-      return request(app.getHttpServer())
-        .get('/user')
-        .set('Authorization', `Bearer ${access_token_common}`)
-        .then((response) => {
-          expect(response.status).toBe(403);
         });
     });
   });
 
-  describe('/user (POST)', () => {
+  describe('/collaborator (POST)', () => {
     it('Should return 201 - created', async () => {
       return request(app.getHttpServer())
-        .post('/user')
+        .post('/collaborator')
         .send({
-          CPF: '123.125.452-74',
-          name: 'Joana Darc',
-          password: 'minhasenhasupersecreta123',
-          privilege: 0,
+          name: 'colaborador 1',
+          register_employee: '643h9o',
+          position: 1,
+          departament: 2,
         })
         .set('Authorization', `Bearer ${access_token_admin}`)
         .then((response) => {
@@ -140,7 +102,7 @@ describe('User Controller (e2e)', () => {
 
     it('Should return 400 - Unauthorized', async () => {
       return request(app.getHttpServer())
-        .post('/user')
+        .post('/collaborator')
         .send({
           CPF: '123.125.452-74',
           name: 'Joana Darc',
@@ -167,21 +129,27 @@ describe('User Controller (e2e)', () => {
         });
     });
 
-    it('Should return 400 - Bad Request - missing attribute in body', async () => {
+    it('Should return 400 - Bad Request - register employee already existe', async () => {
+      await prismaService.collaborator.create({
+        data: {
+          name: 'colaborador 1',
+          register_employ: '643h9o',
+          position: 1,
+          department: 2,
+        },
+      });
+
       return request(app.getHttpServer())
-        .post('/user')
+        .post('/collaborator')
         .send({
-          CPF: '123.125.452-74',
-          name: 'Joana Darc',
-          privilege: 0,
+          name: 'colaborador 1',
+          register_employee: '643h9o',
+          position: 1,
+          departament: 2,
         })
-        .set('Authorization', `Bearer ${access_token_common}`)
+        .set('Authorization', `Bearer ${access_token_admin}`)
         .then((response) => {
           expect(response.status).toBe(400);
-          expect(response.body?.message).toEqual([
-            'password should not be empty',
-            'password must be a string',
-          ]);
         });
     });
 
